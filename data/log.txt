@@ -3,3 +3,11 @@
 [2024-12-15T22:00:37.958646500] Admin tarafından yeni rezervasyon eklendi: duran gezer,2024-10-23,izmir-konya,10:10,9
 [2024-12-15T22:02:42.348100300] User tarafından yeni rezervasyon eklendi: kşşşşş,2022-12-23,konya-izmir,11:11,8
 [2024-12-15T22:03:29.036029700] Admin tarafından rezervasyon silindi: duran gezer,2024-10-23,izmir-konya,10:10,9
+[2024-12-17T15:38:03.099802100] Admin tarafından yeni rezervasyon eklendi: Duran Gezer,2025-03-28,İzmir-Konya,20:00,12
+[2024-12-17T15:43:14.850992800] User tarafından koltuk seçildi: Koltuk No: 7, Ad Soyad: ahmet
+[2024-12-17T15:46:43.281997] User tarafından koltuk seçildi: ahmet talha,2025-03-28,İzmir-Konya,20:00,19
+[2024-12-17T15:53:38.672558100] Admin tarafından toplam koltuk sayısı belirlendi: İzmir-Konya - 2025-03-28 - 20:00 - 30
+[2024-12-17T15:58:11.580252800] Yeni sefer eklendi: İzmir-Konya - 2025-03-28 - 20:00, Koltuk Sayısı: 30
+[2024-12-17T15:59:25.736708600] Yeni sefer eklendi: İsatanbul-Malatya - 2024-12-20 - 12:00, Koltuk Sayısı: 25
+[2024-12-17T16:06:47.119428300] Yeni sefer eklendi: İzmir-Konya - 2025-03-28 - 20:00, Koltuk Sayısı: 22
+[2024-12-17T16:07:21.204244800] User tarafından koltuk seçildi: duran gezer,2025-03-28,İzmir-Konya,20:00,9

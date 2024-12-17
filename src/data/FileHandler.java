@@ -4,6 +4,7 @@ import model.Kullanici;
 import model.Rezervasyon;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FileHandler {
 
@@ -45,4 +46,29 @@ public class FileHandler {
         }
         return liste;
     }
+    public static void seferYaz(String dosyaAdi, HashMap<String, Integer> seferler) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(dosyaAdi))) {
+            for (String key : seferler.keySet()) {
+                bw.write(key + "," + seferler.get(key));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static HashMap<String, Integer> seferOku(String dosyaAdi) {
+        HashMap<String, Integer> seferler = new HashMap<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(dosyaAdi))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                seferler.put(parts[0], Integer.parseInt(parts[1]));
+            }
+        } catch (IOException e) {
+            System.out.println("Sefer dosyası bulunamadı, yeni dosya oluşturulacak.");
+        }
+        return seferler;
+    }
+
 }
