@@ -11,3 +11,11 @@
 [2024-12-17T15:59:25.736708600] Yeni sefer eklendi: İsatanbul-Malatya - 2024-12-20 - 12:00, Koltuk Sayısı: 25
 [2024-12-17T16:06:47.119428300] Yeni sefer eklendi: İzmir-Konya - 2025-03-28 - 20:00, Koltuk Sayısı: 22
 [2024-12-17T16:07:21.204244800] User tarafından koltuk seçildi: duran gezer,2025-03-28,İzmir-Konya,20:00,9
+[2024-12-17T16:48:01.434076600] User tarafından koltuk seçildi: muharrem,2024-12-25,Ankara-İstanbul,15:00,12
+[2024-12-17T17:56:13.725692700] User tarafından koltuk seçildi: talha,2025-03-28,İzmir-Konya,20:00,17
+[2024-12-17T18:32:29.078488700] Kullanıcı güncellendi: user1
+[2024-12-17T18:37:28.470269700] Rezervasyon güncellendi: duran gezer
+[2024-12-17T19:24:22.521184600] User tarafından koltuk seçildi: ahmet,2024-12-20,İstanbul-Ankara,08:00,18
+[2024-12-17T19:31:36.650485800] User tarafından koltuk seçildi: talha,2024-12-20,İstanbul-Ankara,08:00,22
+[2024-12-17T19:31:44.916830900] User tarafından koltuk seçildi: talha,2024-12-25,Ankara-İstanbul,15:00,9
+[2024-12-17T19:49:24.929535300] User tarafından koltuk seçildi: talha,2024-12-22,İzmir-Bursa,10:00,13

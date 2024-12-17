@@ -25,4 +25,14 @@ public class Rezervasyon {
     public String toString() {
         return adSoyad + "," + tarih + "," + guzergah + "," + saat + "," + koltukNo;
     }
+
+    // Ad Soyad'ı güncelleme metodu
+    public void setAdSoyad(String adSoyad) {
+        this.adSoyad = adSoyad;
+    }
+
+    // Koltuk numarasını güncelleme metodu
+    public void setKoltukNo(int koltukNo) {
+        this.koltukNo = koltukNo;
+    }
 }

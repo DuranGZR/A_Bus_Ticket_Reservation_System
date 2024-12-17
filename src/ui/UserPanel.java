@@ -1,6 +1,7 @@
 package ui;
 
 import model.Rezervasyon;
+import model.Kullanici;
 import service.RezervasyonYonetimi;
 import data.FileHandler;
 import data.LogManager;
@@ -16,8 +17,12 @@ public class UserPanel {
     private JFrame frame;
     private RezervasyonYonetimi rezervasyonYonetimi;
     private List<String> seferListesi;
+    private Kullanici currentUser; // Giriş yapan kullanıcı
 
-    public UserPanel() {
+    public UserPanel(Kullanici kullanici) {
+        // Giriş yapan kullanıcıyı alıyoruz
+        this.currentUser = kullanici;
+
         ArrayList<Rezervasyon> rezervasyonlar = FileHandler.rezervasyonOku("data/rezervasyonlar.rez");
         rezervasyonYonetimi = new RezervasyonYonetimi(rezervasyonlar);
         seferListesi = seferleriBelirle();
@@ -32,7 +37,7 @@ public class UserPanel {
         }
 
         frame = new JFrame("User Paneli - Sefer ve Boş Koltuk Seçimi");
-        frame.setSize(600, 400);
+        frame.setSize(600, 450);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
@@ -61,9 +66,36 @@ public class UserPanel {
             }
         });
 
+        // Yeni Butonlar
+        JButton yolcuBilgisiButton = new JButton("Yolcu Bilgisi");
+        yolcuBilgisiButton.setFont(new Font("Arial", Font.BOLD, 14));
+        yolcuBilgisiButton.setBackground(new Color(70, 130, 180));
+        yolcuBilgisiButton.setForeground(Color.WHITE);
+        yolcuBilgisiButton.addActionListener(e -> yolcuBilgisiGoruntule());
+
+        JButton rezervasyonGecmisiButton = new JButton("Rezervasyon Geçmişi");
+        rezervasyonGecmisiButton.setFont(new Font("Arial", Font.BOLD, 14));
+        rezervasyonGecmisiButton.setBackground(new Color(70, 130, 180));
+        rezervasyonGecmisiButton.setForeground(Color.WHITE);
+        rezervasyonGecmisiButton.addActionListener(e -> rezervasyonGecmisiGoruntule());
+
+        JButton cikisButton = new JButton("Çıkış");
+        cikisButton.setFont(new Font("Arial", Font.BOLD, 14));
+        cikisButton.setBackground(new Color(70, 130, 180));
+        cikisButton.setForeground(Color.WHITE);
+        cikisButton.addActionListener(e -> frame.dispose());
+
+        // Buton Panelini yerleştirme
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(2, 2, 10, 10)); // 2 satır, 2 sütun
+        buttonPanel.add(secButton);
+        buttonPanel.add(yolcuBilgisiButton);
+        buttonPanel.add(rezervasyonGecmisiButton);
+        buttonPanel.add(cikisButton);
+
         frame.add(label, BorderLayout.NORTH);
         frame.add(scrollPane, BorderLayout.CENTER);
-        frame.add(secButton, BorderLayout.SOUTH);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
 
@@ -126,4 +158,63 @@ public class UserPanel {
         }
         return doluKoltuklar;
     }
+
+    // Yolcu Bilgilerini Göster ve Güncelle
+    private void yolcuBilgisiGoruntule() {
+        JTextField adSoyadField = new JTextField(currentUser.getAdSoyad());
+        JTextField kullaniciAdiField = new JTextField(currentUser.getKullaniciAdi());
+        JPasswordField sifreField = new JPasswordField(currentUser.getSifre());
+
+        JPanel panel = new JPanel(new GridLayout(3, 2));
+        panel.add(new JLabel("Ad Soyad:"));
+        panel.add(adSoyadField);
+        panel.add(new JLabel("Kullanıcı Adı:"));
+        panel.add(kullaniciAdiField);
+        panel.add(new JLabel("Şifre:"));
+        panel.add(sifreField);
+
+        int result = JOptionPane.showConfirmDialog(frame, panel, "Yolcu Bilgisi ve Güncelleme", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            String yeniAdSoyad = adSoyadField.getText();
+            String yeniKullaniciAdi = kullaniciAdiField.getText();
+            String yeniSifre = new String(sifreField.getPassword());
+
+            if (!yeniAdSoyad.trim().isEmpty() && !yeniKullaniciAdi.trim().isEmpty() && !yeniSifre.trim().isEmpty()) {
+                currentUser.setAdSoyad(yeniAdSoyad);
+                currentUser.setKullaniciAdi(yeniKullaniciAdi);
+                currentUser.setSifre(yeniSifre);
+
+                // Kullanıcı bilgilerini dosyaya kaydet
+                FileHandler.kullaniciYaz("data/kullanicilar.rez", (ArrayList<Kullanici>) List.of(currentUser));
+                JOptionPane.showMessageDialog(frame, "Bilgiler başarıyla güncellendi.");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Tüm alanlar doldurulmalıdır.", "Hata", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void rezervasyonGecmisiGoruntule() {
+        ArrayList<Rezervasyon> rezervasyonlar = rezervasyonYonetimi.getRezervasyonListesi();
+        StringBuilder gecmisBilgisi = new StringBuilder("Geçmiş Rezervasyonlar:\n");
+
+        // Geçmiş rezervasyonları sadece giriş yapan kullanıcıya ait olacak şekilde filtrele
+        for (Rezervasyon r : rezervasyonlar) {
+            if (r.getAdSoyad().equals(currentUser.getAdSoyad())) { // Sadece giriş yapan kullanıcının geçmişi
+                gecmisBilgisi.append("Ad Soyad: ").append(r.getAdSoyad())
+                        .append(", Güzergah: ").append(r.getGuzergah())
+                        .append(", Tarih: ").append(r.getTarih())
+                        .append(", Saat: ").append(r.getSaat())
+                        .append(", Koltuk No: ").append(r.getKoltukNo()).append("\n");
+            }
+        }
+
+        // Eğer geçmiş rezervasyon yoksa
+        if (gecmisBilgisi.length() == "Geçmiş Rezervasyonlar:\n".length()) {
+            gecmisBilgisi.append("Geçmiş rezervasyon bulunmamaktadır.");
+        }
+
+        JOptionPane.showMessageDialog(frame, gecmisBilgisi.toString(), "Geçmiş Rezervasyonlar", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+
 }
