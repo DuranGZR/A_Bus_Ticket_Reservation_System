@@ -1,0 +1,5 @@
+[2024-12-15T10:30:00] Admin tarafından yeni rezervasyon eklendi: Ali Sever, 2024-12-20, İstanbul-Ankara, 08:00, Koltuk 10
+[2024-12-15T10:45:00] User1 tarafından rezervasyon sorgulandı: Tarih=2024-12-20
+[2024-12-15T22:00:37.958646500] Admin tarafından yeni rezervasyon eklendi: duran gezer,2024-10-23,izmir-konya,10:10,9
+[2024-12-15T22:02:42.348100300] User tarafından yeni rezervasyon eklendi: kşşşşş,2022-12-23,konya-izmir,11:11,8
+[2024-12-15T22:03:29.036029700] Admin tarafından rezervasyon silindi: duran gezer,2024-10-23,izmir-konya,10:10,9
