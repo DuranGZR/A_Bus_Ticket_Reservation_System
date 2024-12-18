@@ -8,6 +8,8 @@ import data.LogManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,21 +44,21 @@ public class UserPanel {
         frame.setLayout(new BorderLayout());
 
         JLabel label = new JLabel("Mevcut Seferler:");
-        label.setFont(new Font("Arial", Font.BOLD, 16));
+        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
         label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setForeground(new Color(70, 130, 180));
 
         // Seferleri Listeleyen JList
         DefaultListModel<String> listModel = new DefaultListModel<>();
         seferListesi.forEach(listModel::addElement);
         JList<String> seferJList = new JList<>(listModel);
-        seferJList.setFont(new Font("Arial", Font.PLAIN, 14));
+        seferJList.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        seferJList.setSelectionBackground(new Color(173, 216, 230));
+        seferJList.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         JScrollPane scrollPane = new JScrollPane(seferJList);
 
-        JButton secButton = new JButton("Sefer Seç ve Boş Koltukları Göster");
-        secButton.setFont(new Font("Arial", Font.BOLD, 14));
-        secButton.setBackground(new Color(70, 130, 180));
-        secButton.setForeground(Color.WHITE);
-
+        // Butonlar
+        JButton secButton = createStyledButton("Sefer Seç ve Boş Koltukları Göster");
         secButton.addActionListener(e -> {
             String secilenSefer = seferJList.getSelectedValue();
             if (secilenSefer != null) {
@@ -66,28 +68,19 @@ public class UserPanel {
             }
         });
 
-        // Yeni Butonlar
-        JButton yolcuBilgisiButton = new JButton("Yolcu Bilgisi");
-        yolcuBilgisiButton.setFont(new Font("Arial", Font.BOLD, 14));
-        yolcuBilgisiButton.setBackground(new Color(70, 130, 180));
-        yolcuBilgisiButton.setForeground(Color.WHITE);
+        JButton yolcuBilgisiButton = createStyledButton("Yolcu Bilgisi");
         yolcuBilgisiButton.addActionListener(e -> yolcuBilgisiGoruntule());
 
-        JButton rezervasyonGecmisiButton = new JButton("Rezervasyon Geçmişi");
-        rezervasyonGecmisiButton.setFont(new Font("Arial", Font.BOLD, 14));
-        rezervasyonGecmisiButton.setBackground(new Color(70, 130, 180));
-        rezervasyonGecmisiButton.setForeground(Color.WHITE);
+        JButton rezervasyonGecmisiButton = createStyledButton("Rezervasyon Geçmişi");
         rezervasyonGecmisiButton.addActionListener(e -> rezervasyonGecmisiGoruntule());
 
-        JButton cikisButton = new JButton("Çıkış");
-        cikisButton.setFont(new Font("Arial", Font.BOLD, 14));
-        cikisButton.setBackground(new Color(70, 130, 180));
-        cikisButton.setForeground(Color.WHITE);
-        cikisButton.addActionListener(e -> frame.dispose());
+        JButton cikisButton = createStyledButton("Çıkış");
+        cikisButton.addActionListener(e -> geriDon());
 
         // Buton Panelini yerleştirme
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(2, 2, 10, 10)); // 2 satır, 2 sütun
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        buttonPanel.setBackground(new Color(245, 245, 245));
         buttonPanel.add(secButton);
         buttonPanel.add(yolcuBilgisiButton);
         buttonPanel.add(rezervasyonGecmisiButton);
@@ -99,14 +92,65 @@ public class UserPanel {
         frame.setVisible(true);
     }
 
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        button.setForeground(Color.WHITE);
+        button.setBackground(new Color(65, 105, 225));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(30, 144, 255), 3),
+                BorderFactory.createEmptyBorder(15, 30, 15, 30)
+        ));
+
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                button.setBackground(new Color(100, 149, 237)); // Hover rengi
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                button.setBackground(new Color(65, 105, 225));
+            }
+        });
+
+        return button;
+    }
+
+
+    private void geriDon() {
+        frame.dispose();
+        new LoginScreen();
+    }
+    private int toplamKoltukSayisiniGetir(String secilenSefer) {
+        return FileHandler.seferOku("data/seferler.rez").entrySet().stream()
+                .filter(entry -> {
+                    String seferKey = entry.getKey();
+                    return seferKey.equals(secilenSefer);
+                })
+                .map(entry -> entry.getValue().getToplamKoltuk()) // Sefer nesnesinden toplam koltuk al
+                .findFirst()
+                .orElse(25); // Varsayılan değer 25 (bulunmazsa)
+    }
+
+
     private void bosKoltukSecimEkrani(String secilenSefer) {
         JFrame koltukFrame = new JFrame("Sefer: " + secilenSefer + " - Boş Koltuk Seçimi");
         koltukFrame.setSize(400, 400);
-        koltukFrame.setLayout(new GridLayout(5, 5));
+
+        // Toplam koltuk sayısını getir
+        int toplamKoltuk = toplamKoltukSayisiniGetir(secilenSefer);
+        koltukFrame.setLayout(new GridLayout((int) Math.ceil(toplamKoltuk / 5.0), 5));
+        // Dinamik grid layout
 
         HashSet<Integer> doluKoltuklar = doluKoltuklariGetir(secilenSefer);
+        // Kullanıcı ad soyad bilgilerini yükle
+        HashSet<String> mevcutAdSoyadlar = new HashSet<>();
+        ArrayList<Kullanici> kullaniciListesi = (ArrayList<Kullanici>) FileHandler.kullaniciOku("data/kullanicilar.rez");
+        for (Kullanici kullanici : kullaniciListesi) {
+            mevcutAdSoyadlar.add(kullanici.getAdSoyad().trim().toLowerCase()); // Küçük harf normalizasyonu
+        }
 
-        for (int i = 1; i <= 25; i++) {
+        for (int i = 1; i <= toplamKoltuk; i++) {
             final int koltukNo = i;
             JButton koltukButton = new JButton(String.valueOf(i));
 
@@ -118,6 +162,16 @@ public class UserPanel {
                 koltukButton.addActionListener(e -> {
                     String adSoyad = JOptionPane.showInputDialog("Ad Soyad:");
                     if (adSoyad != null && !adSoyad.trim().isEmpty()) {
+                        adSoyad = adSoyad.trim().toLowerCase(); // Kullanıcıdan girilen adı normalize et
+
+                        // Ad Soyad doğrulama
+                        if (!mevcutAdSoyadlar.contains(adSoyad)) {
+                            JOptionPane.showMessageDialog(koltukFrame,
+                                    "Girilen Ad Soyad kayıtlı kullanıcılar arasında bulunmuyor!",
+                                    "Hata", JOptionPane.ERROR_MESSAGE);
+                            return; // İşlemi iptal et
+                        }
+
                         String[] seferBilgisi = secilenSefer.split(" - ");
                         Rezervasyon yeniRezervasyon = new Rezervasyon(
                                 adSoyad,
@@ -126,9 +180,11 @@ public class UserPanel {
                                 seferBilgisi[2], // Saat
                                 koltukNo
                         );
+
                         rezervasyonYonetimi.ekle(yeniRezervasyon);
                         FileHandler.rezervasyonYaz("data/rezervasyonlar.rez", rezervasyonYonetimi.getRezervasyonListesi());
                         LogManager.log("User tarafından koltuk seçildi: " + yeniRezervasyon);
+
                         JOptionPane.showMessageDialog(koltukFrame, "Rezervasyon başarıyla eklendi!");
                         koltukFrame.dispose();
                     } else {
@@ -141,23 +197,43 @@ public class UserPanel {
         koltukFrame.setVisible(true);
     }
 
+
+
     private List<String> seferleriBelirle() {
-        return rezervasyonYonetimi.getRezervasyonListesi().stream()
-                .map(r -> r.getGuzergah() + " - " + r.getTarih() + " - " + r.getSaat())
-                .distinct()
+        return FileHandler.seferOku("data/seferler.rez").values().stream()
+                .map(sefer -> sefer.getGuzergah() + " - "
+                        + sefer.getTarih() + " - "
+                        + sefer.getSaat()
+                        + " - Koltuk Sayısı: " + sefer.getToplamKoltuk())
                 .collect(Collectors.toList());
     }
 
+
+
+
+
+
+
     private HashSet<Integer> doluKoltuklariGetir(String secilenSefer) {
         HashSet<Integer> doluKoltuklar = new HashSet<>();
+
+        // Sefer adını "Koltuk Sayısı" olmadan düzgün şekilde parçala
+        String[] seferParcalari = secilenSefer.split(" - Koltuk Sayısı:");
+        String duzgunSefer = seferParcalari[0].trim(); // Güzergah, Tarih ve Saat
+
         for (Rezervasyon r : rezervasyonYonetimi.getRezervasyonListesi()) {
-            String sefer = r.getGuzergah() + " - " + r.getTarih() + " - " + r.getSaat();
-            if (sefer.equals(secilenSefer)) {
-                doluKoltuklar.add(r.getKoltukNo());
+            // Rezervasyondaki sefer key'i oluştur
+            String seferKey = r.getGuzergah() + " - " + r.getTarih() + " - " + r.getSaat();
+
+            if (seferKey.equals(duzgunSefer)) {
+                doluKoltuklar.add(r.getKoltukNo()); // Dolu koltukları ekle
             }
         }
         return doluKoltuklar;
     }
+
+
+
 
     // Yolcu Bilgilerini Göster ve Güncelle
     private void yolcuBilgisiGoruntule() {
@@ -193,13 +269,13 @@ public class UserPanel {
         }
     }
 
+    // Rezervasyon geçmişini gösteren method
     private void rezervasyonGecmisiGoruntule() {
         ArrayList<Rezervasyon> rezervasyonlar = rezervasyonYonetimi.getRezervasyonListesi();
         StringBuilder gecmisBilgisi = new StringBuilder("Geçmiş Rezervasyonlar:\n");
 
-        // Geçmiş rezervasyonları sadece giriş yapan kullanıcıya ait olacak şekilde filtrele
         for (Rezervasyon r : rezervasyonlar) {
-            if (r.getAdSoyad().equals(currentUser.getAdSoyad())) { // Sadece giriş yapan kullanıcının geçmişi
+            if (r.getAdSoyad().equals(currentUser.getAdSoyad())) { // Kullanıcı adı üzerinden kontrol
                 gecmisBilgisi.append("Ad Soyad: ").append(r.getAdSoyad())
                         .append(", Güzergah: ").append(r.getGuzergah())
                         .append(", Tarih: ").append(r.getTarih())
@@ -207,6 +283,7 @@ public class UserPanel {
                         .append(", Koltuk No: ").append(r.getKoltukNo()).append("\n");
             }
         }
+
 
         // Eğer geçmiş rezervasyon yoksa
         if (gecmisBilgisi.length() == "Geçmiş Rezervasyonlar:\n".length()) {

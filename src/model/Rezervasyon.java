@@ -7,13 +7,17 @@ public class Rezervasyon {
     private String saat;
     private int koltukNo;
 
+
+
     public Rezervasyon(String adSoyad, String tarih, String guzergah, String saat, int koltukNo) {
+
         this.adSoyad = adSoyad;
         this.tarih = tarih;
         this.guzergah = guzergah;
         this.saat = saat;
         this.koltukNo = koltukNo;
     }
+
 
     public String getAdSoyad() { return adSoyad; }
     public String getTarih() { return tarih; }

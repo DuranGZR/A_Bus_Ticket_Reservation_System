@@ -1,5 +1,6 @@
 package ui;
 
+import data.Sefer;
 import model.Rezervasyon;
 import model.Kullanici;
 import service.RezervasyonYonetimi;
@@ -18,7 +19,7 @@ public class AdminPanel {
     private JTable table;
     private DefaultTableModel model;
     private RezervasyonYonetimi rezervasyonYonetimi;
-    private HashMap<String, Integer> toplamKoltukSayisi;
+    private HashMap<String, Sefer> toplamKoltukSayisi;
     private ArrayList<Kullanici> kullaniciListesi;
     private final String SEFER_DOSYA = "data/seferler.rez";
 
@@ -101,12 +102,50 @@ public class AdminPanel {
     }
 
     private void setButtonStyle(JButton button) {
-        button.setBackground(new Color(60, 179, 113)); // Butonun arka plan rengini yeşil yap
-        button.setForeground(Color.WHITE); // Yazıyı beyaz yap
-        button.setFont(new Font("Arial", Font.PLAIN, 12)); // Yazı tipini ayarla
-        button.setFocusPainted(false); // Odaklanınca kenarlık görünmesin
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Butonun içindeki boşluk
+        button.setFont(new Font("Segoe UI", Font.BOLD, 16)); // Büyük ve kalın yazı tipi
+        button.setForeground(Color.WHITE); // Beyaz yazı
+        button.setBackground(new Color(65, 105, 225)); // Canlı mavi arka plan
+        button.setFocusPainted(false); // Odak çerçevesini kaldır
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(30, 144, 255), 3), // Kalın çerçeve
+                BorderFactory.createEmptyBorder(15, 30, 15, 30) // Geniş iç boşluk
+        ));
+
+        // Butona hafif gölge efekti ekle
+        button.setUI(new javax.swing.plaf.basic.BasicButtonUI() {
+            @Override
+            public void paint(Graphics g, JComponent c) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Gölge efekti
+                g2.setColor(new Color(0, 0, 0, 80));
+                g2.fillRoundRect(5, 5, c.getWidth() - 10, c.getHeight() - 10, 15, 15);
+
+                // Buton rengi
+                g2.setColor(button.getBackground());
+                g2.fillRoundRect(0, 0, c.getWidth(), c.getHeight(), 15, 15);
+
+                super.paint(g2, c);
+                g2.dispose();
+            }
+        });
+
+        // Hover efekti ekle
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(100, 149, 237)); // Hover rengi
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(65, 105, 225)); // Orijinal rengi
+            }
+        });
     }
+
+
+
+
 
     private void seferEkle() {
         JTextField guzergahField = new JTextField();
@@ -126,13 +165,27 @@ public class AdminPanel {
 
         int result = JOptionPane.showConfirmDialog(frame, panel, "Yeni Sefer Ekle", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            String seferKey = guzergahField.getText() + " - " + tarihField.getText() + " - " + saatField.getText();
-            toplamKoltukSayisi.put(seferKey, Integer.parseInt(koltukSayisiField.getText()));
+            String guzergah = guzergahField.getText();
+            String tarih = tarihField.getText();
+            String saat = saatField.getText();
+            int koltukSayisi = Integer.parseInt(koltukSayisiField.getText());
+
+            // Yeni sefer oluştur
+            String seferKey = guzergah + " - " + tarih + " - " + saat;
+            Sefer yeniSefer = new Sefer(guzergah, tarih, saat, koltukSayisi);
+
+            // Mevcut seferleri oku ve yeni seferi ekle
+            toplamKoltukSayisi = FileHandler.seferOku(SEFER_DOSYA); // Tüm seferleri yeniden yükle
+            toplamKoltukSayisi.put(seferKey, yeniSefer); // Yeni seferi ekle
+
+            // Dosyaya yaz ve tabloyu güncelle
             FileHandler.seferYaz(SEFER_DOSYA, toplamKoltukSayisi);
-            LogManager.log("Yeni sefer eklendi: " + seferKey);
             veriGoster();
+            JOptionPane.showMessageDialog(frame, "Sefer başarıyla eklendi!");
         }
     }
+
+
 
     private void seferSil() {
         int row = table.getSelectedRow();
@@ -144,6 +197,7 @@ public class AdminPanel {
             veriGoster();
         }
     }
+
 
     private void rezervasyonDuzenle() {
         int row = table.getSelectedRow();
@@ -339,6 +393,8 @@ public class AdminPanel {
 
     private void veriGoster() {
         model.setRowCount(0); // Mevcut tabloyu temizle
+        toplamKoltukSayisi = FileHandler.seferOku(SEFER_DOSYA); // Seferleri tekrar yükle
+
         HashMap<String, Integer> doluKoltukSayisi = new HashMap<>();
 
         // Rezervasyonlardan dolu koltuk sayılarını hesapla
@@ -348,10 +404,19 @@ public class AdminPanel {
         }
 
         // Seferleri tabloya ekle
-        toplamKoltukSayisi.forEach((sefer, toplamKoltuk) -> {
-            int doluKoltuk = doluKoltukSayisi.getOrDefault(sefer, 0); // Dolu koltukları al
-            model.addRow(new Object[]{sefer.split(" - ")[0], sefer.split(" - ")[1], sefer.split(" - ")[2], toplamKoltuk, doluKoltuk});
+        toplamKoltukSayisi.forEach((seferKey, sefer) -> {
+            int doluKoltuk = doluKoltukSayisi.getOrDefault(seferKey, 0); // Dolu koltukları al
+            model.addRow(new Object[]{
+                    sefer.getGuzergah(),    // Güzergah
+                    sefer.getTarih(),       // Tarih
+                    sefer.getSaat(),        // Saat
+                    sefer.getToplamKoltuk(), // Toplam Koltuk Sayısı
+                    doluKoltuk              // Dolu Koltuk Sayısı
+            });
         });
     }
+
+
+
 
 }

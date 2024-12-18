@@ -19,3 +19,32 @@
 [2024-12-17T19:31:36.650485800] User tarafından koltuk seçildi: talha,2024-12-20,İstanbul-Ankara,08:00,22
 [2024-12-17T19:31:44.916830900] User tarafından koltuk seçildi: talha,2024-12-25,Ankara-İstanbul,15:00,9
 [2024-12-17T19:49:24.929535300] User tarafından koltuk seçildi: talha,2024-12-22,İzmir-Bursa,10:00,13
+[2024-12-17T20:09:08.842570800] Yeni sefer eklendi: İzmir-Malatya - 2025-02-23 - 13:03
+[2024-12-17T20:09:38.341624300] Kullanıcı güncellendi: admin
+[2024-12-17T20:23:17.624291500] Sefer silindi: İzmir-Malatya - 2025-02-23 - 13:03
+[2024-12-17T20:23:48.230845] Yeni sefer eklendi: İzmir-Malatya - 2025-02-22 - 13:10
+[2024-12-17T23:18:06.320109700] User tarafından koltuk seçildi: talha,2025-02-22,İzmir-Malatya,13:10,42
+[2024-12-17T23:25:42.360266700] User tarafından koltuk seçildi: ilker,2025-02-22,İzmir-Malatya,13:10,12
+[2024-12-18T00:28:45.787185900] User tarafından koltuk seçildi: ilker yılmaz,2024-12-25,Ankara-İstanbul,15:00,23
+[2024-12-18T00:39:11.684396300] Rezervasyon güncellendi: ahmet talha
+[2024-12-18T00:44:52.423342100] User tarafından koltuk seçildi: muharem,2025-03-28,İzmir-Konya,20:00,1
+[2024-12-18T00:45:47.834472600] User tarafından koltuk seçildi: muharrem,2025-02-22,İzmir-Malatya,13:10,40
+[2024-12-18T00:45:59.001303500] User tarafından koltuk seçildi: mahmut,2025-02-22,İzmir-Malatya,13:10,1
+[2024-12-18T00:49:23.838377800] Yeni sefer eklendi: Antalya-Isparta - 2025-01-01 - 20:00
+[2024-12-18T00:51:17.076981700] Yeni sefer eklendi: Antalya-Isparta - 2025-01-01 - 21:00
+[2024-12-18T01:03:24.012313500] User tarafından koltuk seçildi: talha,2024-12-30,Konya-Isparta,12:00,8
+[2024-12-18T01:28:23.246002300] User tarafından koltuk seçildi: ahmed,2025-02-22,İzmir-Malatya,13:10,15
+[2024-12-18T01:52:11.089127900] User tarafından koltuk seçildi: ahmed-aydogan,2024-12-20,İstanbul-Ankara,08:00,1
+[2024-12-18T01:53:28.622355] User tarafından koltuk seçildi: çağrı emir,2025-02-22,İzmir-Malatya,13:10,24
+[2024-12-18T01:53:43.402266800] User tarafından koltuk seçildi: çağrı emir,2025-02-22,İzmir-Malatya,13:10,23
+[2024-12-18T02:00:26.692420800] User tarafından koltuk seçildi: çağrı emir,2025-03-28,İzmir-Konya,20:00,14
+[2024-12-18T02:01:52.463133200] User tarafından koltuk seçildi: ahmet,2025-02-22,İzmir-Malatya,13:10,9
+[2024-12-18T02:03:34.677418700] User tarafından koltuk seçildi: talha,2025-02-22,İzmir-Malatya,13:10,21
+[2024-12-18T02:05:32.274370] User tarafından koltuk seçildi: çağrı emir,2025-02-22,İzmir-Malatya,13:10,15
+[2024-12-18T02:11:34.980425400] User tarafından koltuk seçildi: eren sıddık,2025-02-22,İzmir-Malatya,13:10,7
+[2024-12-18T02:16:36.512352900] User tarafından koltuk seçildi: talha,2024-12-25,Ankara-İstanbul,20:00,18
+[2024-12-18T09:52:29.237584600] User tarafından koltuk seçildi: talha,2025-04-11,Ankara-İzmir,05:00,13
+[2024-12-18T09:55:49.931874100] User tarafından koltuk seçildi: mahmut yılmaz,2025-04-11,Ankara-İzmir,05:00,8
+[2024-12-18T10:20:32.839351200] User tarafından koltuk seçildi: talha,2024-12-30,Konya-Isparta,12:00,23
+[2024-12-18T10:28:34.314643200] Rezervasyon güncellendi: ilker
+[2024-12-18T10:29:33.062814700] User tarafından koltuk seçildi: talha,2024-12-30,Konya-Isparta,12:00,11

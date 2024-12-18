@@ -131,21 +131,32 @@ public class LoginScreen {
     private void kullaniciEkle(String rol) {
         JTextField kullaniciAdiField = new JTextField();
         JPasswordField sifreField = new JPasswordField();
+        JTextField adSoyadField = new JTextField(); // Ad Soyad için ek alan
 
-        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10)); // 4 satırlı panel
         panel.add(new JLabel("Kullanıcı Adı:"));
         panel.add(kullaniciAdiField);
         panel.add(new JLabel("Şifre:"));
         panel.add(sifreField);
+        panel.add(new JLabel("Ad Soyad:"));
+        panel.add(adSoyadField);
 
         int result = JOptionPane.showConfirmDialog(frame, panel,
                 rol.equals("ADMIN") ? "Yeni Admin Ekle" : "Yeni Kullanıcı Ekle",
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-            String kullaniciAdi = kullaniciAdiField.getText();
-            String sifre = EncryptionUtil.hashPassword(new String(sifreField.getPassword()));
-            String adSoyad = "";
+            String kullaniciAdi = kullaniciAdiField.getText().trim();
+            String sifre = EncryptionUtil.hashPassword(new String(sifreField.getPassword()).trim());
+            String adSoyad = adSoyadField.getText().trim();
+
+            // Boş alan kontrolü
+            if (kullaniciAdi.isEmpty() || sifre.isEmpty() || adSoyad.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Tüm alanlar doldurulmalıdır!", "Hata", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Yeni kullanıcı oluştur
             Kullanici yeniKullanici = new Kullanici(kullaniciAdi, sifre, rol, adSoyad);
 
             kullaniciListesi.add(yeniKullanici);
@@ -153,4 +164,5 @@ public class LoginScreen {
             JOptionPane.showMessageDialog(frame, rol + " başarıyla eklendi!");
         }
     }
+
 }
